@@ -1,16 +1,10 @@
-# space_invaders_2
+# Space Invaders Flutter
 
-A new Flutter project.
+A port of my groovy space invaders to flutter for learning and testing cross-platform
 
-## Getting Started
+## Related
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* [Original Groovy Space Invaders](https://github.com/sjhorn/SpaceInvaders/)
+* [Minimal Gameloop in Flutter](https://gist.github.com/nosmirck/1305106bae6d43d05f57c7bb254f9ff9)
+* [Flame Game Engine for Flutter](https://flame-engine.org)
+* [Building A 2D game in Flutter- A Comprehensive Guide](https://blog.geekyants.com/building-a-2d-game-in-flutter-a-comprehensive-guide-913f647846bc)
