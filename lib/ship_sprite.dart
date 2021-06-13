@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:math';
+import 'space_invaders.dart';
 import 'sprite.dart';
 
 abstract class ShipSprite extends Sprite {
@@ -36,7 +37,8 @@ abstract class ShipSprite extends Sprite {
   void draw(ui.Image sheet, Canvas canvas, Size size) {
     if (isStarting()) {
       Rect l = lifeRectangles[lives];
-      double scale = min(size.width / sheet.width, size.height / sheet.height);
+      double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
+          size.height / SpaceInvaders.GAME_HEIGHT);
       canvas.drawImageRect(
           sheet,
           l,

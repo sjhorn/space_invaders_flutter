@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'space_invaders.dart';
 
@@ -20,10 +21,11 @@ late ui.Image sheet;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     setWindowTitle("Flutter Space Invaders");
-    setWindowMinSize(Size(640, 480));
-    setWindowFrame(Rect.fromLTWH(0, 0, 1400, 768));
+    setWindowMinSize(Size(SpaceInvaders.GAME_WIDTH, SpaceInvaders.GAME_HEIGHT));
+    setWindowFrame(Rect.fromLTWH(
+        0, 0, SpaceInvaders.GAME_WIDTH * 2, SpaceInvaders.GAME_HEIGHT * 2));
   }
   sheet = await loadUiImage("assets/images/SpriteSheet.png");
 
@@ -46,21 +48,19 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1))
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
           ..repeat();
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
-    _prevTime = DateTime.now().microsecondsSinceEpoch * 1000.0;
+
+    _prevTime = DateTime.now().microsecondsSinceEpoch * 1000;
   }
 
   @override
   Widget build(BuildContext context) {
-    var currentTime = DateTime.now().microsecondsSinceEpoch * 1000.0;
-    var timePassed = currentTime - _prevTime;
-    _prevTime = currentTime;
     final FocusNode _focusNode = FocusNode();
     FocusScope.of(context).requestFocus(_focusNode);
     return MaterialApp(
-        title: "Space Invaders in Flutter",
+        title: "Space Invaders in Flutter2",
         theme: new ThemeData(scaffoldBackgroundColor: Colors.black),
         home: Scaffold(
             body: RawKeyboardListener(
@@ -69,6 +69,11 @@ class _HomeScreenState extends State<HomeScreen>
                 child: AnimatedBuilder(
                   animation: _animation,
                   builder: (context, child) {
+                    double currentTime =
+                        DateTime.now().microsecondsSinceEpoch * 1000;
+                    double timePassed = currentTime - _prevTime;
+                    _prevTime = currentTime;
+
                     return CustomPaint(
                       child: Container(),
                       painter: GamePainter(_spaceInvaders, timePassed),

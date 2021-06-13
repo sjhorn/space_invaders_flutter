@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:math';
 
+import 'space_invaders.dart';
+
 class Sprite {
-  List<Rect> _spriteFrames = [];
+  List<Rect> spriteFrames = [];
 
   int frameIndex = 0;
   Rect location = Rect.fromLTWH(0, 0, 0, 0);
@@ -13,30 +15,34 @@ class Sprite {
   bool exploding = false;
   bool _hidden = false;
   Sprite? hitBy;
+  bool stayWithinBounds = true;
 
   Sprite();
 
   Sprite.fromFrame(Rect spriteFrame, this.bounds, this.location,
       [this.speedX = 0, this.speedY = 0])
-      : _spriteFrames = [spriteFrame];
+      : spriteFrames = [spriteFrame];
 
-  Sprite.fromFrames(this._spriteFrames, this.bounds, this.location,
+  Sprite.fromFrames(this.spriteFrames, this.bounds, this.location,
       [this.speedX = 0, this.speedY = 0]);
 
   void draw(ui.Image spriteSheet, Canvas canvas, Size size) {
     if (_hidden) return;
-    Rect frame = _spriteFrames[frameIndex];
-    double scale =
-        min(size.width / spriteSheet.width, size.height / spriteSheet.height);
+    Rect frame = spriteFrames[frameIndex];
+    double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
+        size.height / SpaceInvaders.GAME_HEIGHT);
     canvas.drawImageRect(
         spriteSheet,
         frame,
-        Rect.fromLTWH(location.left * scale, location.top * scale,
-            frame.width * scale, frame.height * scale),
+        Rect.fromLTWH(
+            (location.left * scale).round().toDouble(),
+            (location.top * scale).round().toDouble(),
+            (frame.width * scale).round().toDouble(),
+            (frame.height * scale).round().toDouble()),
         Paint());
   }
 
-  bool move(double timePassed, [bool stayWithinBounds = true]) {
+  bool move(double timePassed, [bool freeze = false]) {
     double newX = location.left + timePassed * speedX / 1000000000;
 
     if (stayWithinBounds && newX + location.width > bounds.right) {
@@ -69,5 +75,9 @@ class Sprite {
 
   void hide() {
     _hidden = true;
+  }
+
+  bool isExploding() {
+    return exploding;
   }
 }
