@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'scoring_sprite.dart';
+import 'sound.dart';
 
 class InvaderSprite extends ScoringSprite {
+  final Sound invaderhit = new Sound("invaderhit.wav");
+
   InvaderSprite(int row, Rect bounds, Rect location)
       : super.fromFrames([
           Rect.fromLTWH(row * 64, 0, 32, 20),
@@ -26,7 +29,7 @@ class InvaderSprite extends ScoringSprite {
   @override
   void explode() {
     frameIndex = 2;
-    //invaderhit.play();
+    invaderhit.play();
     super.explode();
   }
 }

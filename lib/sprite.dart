@@ -64,7 +64,8 @@ class Sprite {
   }
 
   bool collidesWith(Sprite sprite) {
-    return sprite.location.intersect(location).width > 0;
+    Rect isect = sprite.location.intersect(location);
+    return !isect.isEmpty;
   }
 
   void nextState() {}
@@ -79,5 +80,9 @@ class Sprite {
 
   bool isExploding() {
     return exploding;
+  }
+
+  bool ishidden() {
+    return _hidden;
   }
 }

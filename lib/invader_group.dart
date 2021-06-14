@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'invader_sprite.dart';
+import 'sound.dart';
 import 'sprite.dart';
 
 class InvaderGroup extends Sprite {
@@ -21,6 +22,7 @@ class InvaderGroup extends Sprite {
   List<InvaderSprite> invaders = [];
   List<InvaderSprite> invadersToRemove = [];
   Map<int, List<InvaderSprite>> invaderColumn = {};
+  Sound _invaderSound = Sound("invaders.wav");
 
   InvaderGroup(Rect bounds, [double waitTime = 700000000]) {
     this.bounds = bounds;
@@ -91,7 +93,7 @@ class InvaderGroup extends Sprite {
               waitTime /*&&
           invaders.fold(false, (prev, it) => !it.isExploding())*/
           ) {
-        //invaderSound.play();
+        _invaderSound.play();
         int vaderLength = invaders.length;
         if (vaderLength <= 36 && vaderLength >= 25) {
           delta = 5;

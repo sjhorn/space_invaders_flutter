@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'sound.dart';
 import 'space_invaders.dart';
 
 import 'dart:async';
@@ -22,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    setWindowTitle("Flutter Space Invaders");
+    setWindowTitle(SpaceInvaders.TITLE);
     setWindowMinSize(Size(SpaceInvaders.GAME_WIDTH, SpaceInvaders.GAME_HEIGHT));
     setWindowFrame(Rect.fromLTWH(
         0, 0, SpaceInvaders.GAME_WIDTH * 2, SpaceInvaders.GAME_HEIGHT * 2));
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  SpaceInvaders _spaceInvaders = SpaceInvaders(sheet);
+  late SpaceInvaders _spaceInvaders = SpaceInvaders(sheet);
   late double _prevTime;
 
   @override
@@ -51,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen>
         AnimationController(vsync: this, duration: const Duration(seconds: 1))
           ..repeat();
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
-
     _prevTime = DateTime.now().microsecondsSinceEpoch * 1000;
   }
 
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
     final FocusNode _focusNode = FocusNode();
     FocusScope.of(context).requestFocus(_focusNode);
     return MaterialApp(
-        title: "Space Invaders in Flutter2",
+        title: SpaceInvaders.TITLE,
         theme: new ThemeData(scaffoldBackgroundColor: Colors.black),
         home: Scaffold(
             body: RawKeyboardListener(

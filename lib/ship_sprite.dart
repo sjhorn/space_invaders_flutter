@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:math';
+import 'bullet_sprite.dart';
+import 'sound.dart';
 import 'space_invaders.dart';
 import 'sprite.dart';
 
 abstract class ShipSprite extends Sprite {
-  static final double STARTING_TIME = 2000000000;
-  static final double EXPLODING_TIME = 1200000000;
+  static const double STARTING_TIME = 2000000000;
+  static const double EXPLODING_TIME = 1200000000;
 
+  static final Sound shiphit = Sound("shiphit.wav");
   double startingTime = STARTING_TIME;
   double explodingTime = 0;
   double blinkFrameTime = 0;
@@ -74,6 +77,7 @@ abstract class ShipSprite extends Sprite {
   void explode() {
     explodingTime = EXPLODING_TIME;
     frameIndex = 2;
+    shiphit.play();
     super.explode();
   }
 
@@ -114,5 +118,25 @@ abstract class ShipSprite extends Sprite {
     }
 
     return super.move(timePassed, true);
+  }
+
+  void fire() {
+    BulletSprite.fireFromShip(this);
+  }
+
+  void leftOn() {
+    moveLeft = true;
+  }
+
+  void leftOff() {
+    moveLeft = false;
+  }
+
+  void rightOn() {
+    moveRight = true;
+  }
+
+  void rightOff() {
+    moveRight = false;
   }
 }
