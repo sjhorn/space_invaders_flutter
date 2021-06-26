@@ -85,7 +85,7 @@ class BulletSprite extends Sprite {
       for (BulletSprite bullet in bullets) {
         if (sprite is InvaderSprite && bullet.type == BulletType.INVADER)
           continue;
-        if (!sprite.ishidden() &&
+        if (!sprite.isHidden() &&
             !sprite.isExploding() &&
             sprite.collidesWith(bullet)) {
           sprite.hitBy = bullet;

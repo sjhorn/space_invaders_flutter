@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'sound.dart';
 import 'space_invaders.dart';
 
 import 'dart:async';
@@ -58,6 +57,9 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final FocusNode _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      print("Focus? ${_focusNode.hasFocus}");
+    });
     FocusScope.of(context).requestFocus(_focusNode);
     return MaterialApp(
         title: SpaceInvaders.TITLE,

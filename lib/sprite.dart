@@ -27,7 +27,7 @@ class Sprite {
       [this.speedX = 0, this.speedY = 0]);
 
   void draw(ui.Image spriteSheet, Canvas canvas, Size size) {
-    if (_hidden) return;
+    if (isHidden()) return;
     Rect frame = spriteFrames[frameIndex];
     double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
         size.height / SpaceInvaders.GAME_HEIGHT);
@@ -78,11 +78,15 @@ class Sprite {
     _hidden = true;
   }
 
+  void show() {
+    _hidden = false;
+  }
+
   bool isExploding() {
     return exploding;
   }
 
-  bool ishidden() {
+  bool isHidden() {
     return _hidden;
   }
 }

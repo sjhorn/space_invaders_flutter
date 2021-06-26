@@ -30,7 +30,7 @@ class ShieldSprite extends Sprite {
   void draw(ui.Image spriteSheet, Canvas canvas, Size size) {
     double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
         size.height / SpaceInvaders.GAME_HEIGHT);
-    if (!ishidden()) {
+    if (!isHidden()) {
       super.draw(spriteSheet, canvas, size);
       Paint paint = new Paint()
         ..style = PaintingStyle.fill

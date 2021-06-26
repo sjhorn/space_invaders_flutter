@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:space_invaders_2/command_ship_sprite.dart';
 import 'package:space_invaders_2/scoring_sprite.dart';
 import 'package:space_invaders_2/ship_sprite.dart';
 import 'dart:ui' as ui;
 
 import 'bullet_sprite.dart';
+import 'invader_sprite.dart';
 import 'player1_score_sprite.dart';
 import 'player2_score_sprite.dart';
 import 'earth_sprite.dart';
@@ -44,14 +46,15 @@ class SpaceInvaders {
   late ShieldSprite shieldSprite2;
   late ShieldSprite shieldSprite3;
   late InvaderGroup invaderGroup;
+  late CommandShipSprite commandShipSprite;
 
   static setTitle(String title) {
     if (!kIsWeb &&
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       setWindowTitle(title);
+      SystemChrome.setApplicationSwitcherDescription(
+          ApplicationSwitcherDescription(label: title));
     }
-    SystemChrome.setApplicationSwitcherDescription(
-        ApplicationSwitcherDescription(label: title));
   }
 
   SpaceInvaders(ui.Image sheet) {
@@ -90,6 +93,7 @@ class SpaceInvaders {
     invaderGroup = InvaderGroup(invaderBounds, vaderSpeed);
 
     BulletSprite.bullets.clear();
+    commandShipSprite = CommandShipSprite(logicalBounds);
   }
 
   void newLevel() {
@@ -115,6 +119,7 @@ class SpaceInvaders {
       }
     } else {
       bool freeze = isFrozen();
+      commandShipSprite.move(timePassed, freeze);
       ship1Sprite.move(timePassed, freeze);
       if (twoPlayer) ship2Sprite.move(timePassed, freeze);
       invaderGroup.move(timePassed, freeze);
@@ -129,8 +134,17 @@ class SpaceInvaders {
           (ship1Sprite.lives < 1 && ship2Sprite.lives < 1)) {
         doGameOver();
       } else {
+        // Command Ship
+        commandShipTime += timePassed;
+        if (commandShipSprite.isHidden() && commandShipTime > 18000000000) {
+          commandShipTime = 0;
+          commandShipSprite.show();
+        }
+
+        // Move bullets
         BulletSprite.moveAll(timePassed, freeze);
 
+        // Detect collisionsd
         List<Sprite> sprites = [
           ...invaderGroup.invaders,
           shieldSprite1,
@@ -138,6 +152,7 @@ class SpaceInvaders {
           shieldSprite3,
           if (ship1Sprite.lives > 0) ship1Sprite,
           if (ship2Sprite.lives > 0) ship2Sprite,
+          if (!commandShipSprite.isHidden()) commandShipSprite,
         ];
 
         for (Sprite sprite in BulletSprite.detectCollisions(sprites)) {
@@ -153,19 +168,22 @@ class SpaceInvaders {
             BulletSprite.bullets.clear(); // Clear bullets after ships explodes
           }
         }
-
-        if (invaderGroup.location.bottom > shieldSprite1.location.top) {
-          shieldSprite1.hide();
-          shieldSprite2.hide();
-          shieldSprite3.hide();
-        }
       }
     }
   }
 
   void render(Canvas canvas, Size size) {
-    playerOneScoreSprite.draw(_sheet, canvas, size);
-    playerTwoScoreSprite.draw(_sheet, canvas, size);
+    if (commandShipSprite.isHidden()) {
+      playerOneScoreSprite.draw(_sheet, canvas, size);
+      playerTwoScoreSprite.draw(_sheet, canvas, size);
+    }
+
+    // Decide here to avoid drawing in start sequence in later levels
+    if (invaderGroup.location.bottom > shieldSprite1.location.top) {
+      shieldSprite1.hide();
+      shieldSprite2.hide();
+      shieldSprite3.hide();
+    }
     earthSprite.draw(_sheet, canvas, size);
     ship1Sprite.draw(_sheet, canvas, size);
     if (twoPlayer) ship2Sprite.draw(_sheet, canvas, size);
@@ -173,7 +191,7 @@ class SpaceInvaders {
     shieldSprite2.draw(_sheet, canvas, size);
     shieldSprite3.draw(_sheet, canvas, size);
     invaderGroup.draw(_sheet, canvas, size);
-
+    commandShipSprite.draw(_sheet, canvas, size);
     BulletSprite.drawAll(_sheet, canvas, size);
   }
 
@@ -201,7 +219,7 @@ class SpaceInvaders {
           if (!isFrozen()) ship2Sprite.fire();
           break;
         case 'L':
-          ship2Sprite.rightOff();
+          ship2Sprite.rightOn();
           break;
 
         default:
@@ -233,6 +251,16 @@ class SpaceInvaders {
           break;
         case 'R':
           resetAndStart();
+          break;
+        case 'X':
+          for (InvaderSprite invader in invaderGroup.invaders) {
+            playerOneScoreSprite.score += invader.score;
+            invader.explode();
+          }
+          if (!commandShipSprite.isHidden()) {
+            playerOneScoreSprite.score += commandShipSprite.score;
+            commandShipSprite.explode();
+          }
           break;
         default:
       }
