@@ -30,6 +30,9 @@ class ShieldSprite extends Sprite {
   void draw(ui.Image spriteSheet, Canvas canvas, Size size) {
     double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
         size.height / SpaceInvaders.GAME_HEIGHT);
+    double offset = (size.width / 2 - (SpaceInvaders.GAME_WIDTH * scale) / 2)
+        .round()
+        .toDouble();
     if (!isHidden()) {
       super.draw(spriteSheet, canvas, size);
       Paint paint = new Paint()
@@ -38,7 +41,7 @@ class ShieldSprite extends Sprite {
 
       for (Rect dr in damageRects) {
         Rect scaled = Rect.fromLTWH(
-            (dr.left * scale).round().toDouble(),
+            (dr.left * scale).round().toDouble() + offset,
             (dr.top * scale).round().toDouble(),
             (dr.width * scale).round().toDouble(),
             (dr.height * scale).round().toDouble());

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'bullet_sprite.dart';
 import 'invader_sprite.dart';
 import 'sound.dart';
 import 'sprite.dart';
@@ -22,7 +23,7 @@ class InvaderGroup extends Sprite {
   List<InvaderSprite> invaders = [];
   List<InvaderSprite> invadersToRemove = [];
   Map<int, List<InvaderSprite>> invaderColumn = {};
-  Sound _invaderSound = Sound("invaders.wav");
+  Sound _invaderSound = Sound("invaders.mp3");
 
   InvaderGroup(Rect bounds, [double waitTime = 700000000]) {
     this.bounds = bounds;
@@ -81,11 +82,11 @@ class InvaderGroup extends Sprite {
       fireTime += timePassed;
 
       if (fireTime > 800000000) {
-        // int col = r.nextInt(6);
-        // if (invaderColumn[col]!.length > 0) {
-        //   Sprite invader = invaderColumn[col]!.last;
-        //   BulletSprite.fireFromInvader(invader);
-        // }
+        int col = r.nextInt(6);
+        if (invaderColumn[col]!.length > 0) {
+          Sprite invader = invaderColumn[col]!.last;
+          BulletSprite.fireFromInvader(invader);
+        }
         fireTime = 0;
       }
 

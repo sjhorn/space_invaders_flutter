@@ -36,11 +36,15 @@ class SpaceInvaders {
   double commandShipTime = 0;
 
   late ui.Image _sheet;
-  late PlayerOneScoreSprite playerOneScoreSprite;
-  late PlayerTwoScoreSprite playerTwoScoreSprite;
-  late EarthSprite earthSprite;
-  late Ship1Sprite ship1Sprite;
-  late Ship2Sprite ship2Sprite;
+  late Size _size;
+
+  PlayerOneScoreSprite playerOneScoreSprite =
+      PlayerOneScoreSprite(logicalBounds);
+  PlayerTwoScoreSprite playerTwoScoreSprite =
+      PlayerTwoScoreSprite(logicalBounds);
+  EarthSprite earthSprite = EarthSprite(logicalBounds);
+  Ship1Sprite ship1Sprite = Ship1Sprite(logicalBounds);
+  Ship2Sprite ship2Sprite = Ship2Sprite(logicalBounds);
 
   late ShieldSprite shieldSprite1;
   late ShieldSprite shieldSprite2;
@@ -59,22 +63,13 @@ class SpaceInvaders {
 
   SpaceInvaders(ui.Image sheet) {
     _sheet = sheet;
-
+    reset();
     startLevel();
   }
 
   void startLevel() {
     setTitle(
         "$TITLE - Level $level - ${twoPlayer ? 'Two Player' : 'One Player'}");
-
-    // Add Players
-    if (level == 0) {
-      playerOneScoreSprite = PlayerOneScoreSprite(logicalBounds);
-      playerTwoScoreSprite = PlayerTwoScoreSprite(logicalBounds);
-      earthSprite = EarthSprite(logicalBounds);
-      ship1Sprite = Ship1Sprite(logicalBounds);
-      ship2Sprite = Ship2Sprite(logicalBounds);
-    }
 
     // Add bases
     double baseY = logicalBounds.height / 2 + 110;
@@ -173,6 +168,7 @@ class SpaceInvaders {
   }
 
   void render(Canvas canvas, Size size) {
+    _size = size;
     if (commandShipSprite.isHidden()) {
       playerOneScoreSprite.draw(_sheet, canvas, size);
       playerTwoScoreSprite.draw(_sheet, canvas, size);
@@ -200,6 +196,28 @@ class SpaceInvaders {
         (twoPlayer && (ship2Sprite.isStarting() || ship2Sprite.isExploding()));
   }
 
+  void onTapDown(TapDownDetails event) {
+    double qtrWidth = _size.width / 4;
+    double posX = event.globalPosition.dx;
+    if (posX < qtrWidth) {
+      ship1Sprite.leftOn();
+    } else if (posX > 3 * qtrWidth) {
+      ship1Sprite.rightOn();
+    } else if (!isFrozen() && !paused) {
+      ship1Sprite.fire();
+    }
+  }
+
+  void onTapUp(TapUpDetails event) {
+    double qtrWidth = _size.width / 4;
+    double posX = event.globalPosition.dx;
+    if (posX < qtrWidth) {
+      ship1Sprite.leftOff();
+    } else if (posX > 3 * qtrWidth) {
+      ship1Sprite.rightOff();
+    }
+  }
+
   void onKey(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
       switch (event.logicalKey.keyLabel) {
@@ -207,7 +225,7 @@ class SpaceInvaders {
           ship1Sprite.leftOn();
           break;
         case 'S':
-          if (!isFrozen()) ship1Sprite.fire();
+          if (!isFrozen() && !paused) ship1Sprite.fire();
           break;
         case 'D':
           ship1Sprite.rightOn();
@@ -216,7 +234,7 @@ class SpaceInvaders {
           ship2Sprite.leftOn();
           break;
         case 'K':
-          if (!isFrozen()) ship2Sprite.fire();
+          if (!isFrozen() && !paused) ship2Sprite.fire();
           break;
         case 'L':
           ship2Sprite.rightOn();
@@ -274,13 +292,20 @@ class SpaceInvaders {
 
   void doGameOver() {
     gameOver = true;
-    reset();
+
+    resetAndStart();
   }
 
   void reset() {
     level = 0;
     BulletSprite.bullets.clear();
-    ship1Sprite.hide();
-    if (twoPlayer) ship2Sprite.hide();
+    playerOneScoreSprite.score = 0;
+    playerTwoScoreSprite.score = 0;
+    ship1Sprite = Ship1Sprite(logicalBounds);
+    ship2Sprite = Ship2Sprite(logicalBounds);
+
+    if (!twoPlayer) {
+      ship2Sprite.hide();
+    }
   }
 }

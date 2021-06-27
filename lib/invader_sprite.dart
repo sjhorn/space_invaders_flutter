@@ -4,7 +4,7 @@ import 'scoring_sprite.dart';
 import 'sound.dart';
 
 class InvaderSprite extends ScoringSprite {
-  final Sound invaderhit = new Sound("invaderhit.wav");
+  final Sound invaderhit = new Sound("invaderhit.mp3");
 
   InvaderSprite(int row, Rect bounds, Rect location)
       : super.fromFrames([

@@ -10,7 +10,7 @@ abstract class ShipSprite extends Sprite {
   static const double STARTING_TIME = 2000000000;
   static const double EXPLODING_TIME = 1200000000;
 
-  static final Sound shiphit = Sound("shiphit.wav");
+  static final Sound shiphit = Sound("shiphit.mp3");
   double startingTime = STARTING_TIME;
   double explodingTime = 0;
   double blinkFrameTime = 0;
@@ -42,11 +42,17 @@ abstract class ShipSprite extends Sprite {
       Rect l = lifeRectangles[lives];
       double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
           size.height / SpaceInvaders.GAME_HEIGHT);
+      double offset = (size.width / 2 - (SpaceInvaders.GAME_WIDTH * scale) / 2)
+          .round()
+          .toDouble();
       canvas.drawImageRect(
           sheet,
           l,
-          Rect.fromLTWH((bounds.left + bounds.width / 2 + livesOffset) * scale,
-              location.top * scale, 42 * scale, 20 * scale),
+          Rect.fromLTWH(
+              (bounds.left + bounds.width / 2 + livesOffset) * scale + offset,
+              location.top * scale,
+              42 * scale,
+              20 * scale),
           new Paint());
       super.draw(sheet, canvas, size);
     } else if (lives > 0) {

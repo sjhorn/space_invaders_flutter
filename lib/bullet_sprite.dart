@@ -17,7 +17,6 @@ class BulletSprite extends Sprite {
   static List<BulletSprite> bulletsToRemove = [];
 
   static bool powerMode = false;
-  //static Sound _shipFire = Sound("assets/sounds/shipfire.wav");
 
   BulletSprite(Rect bounds, Rect location, BulletType type)
       : super.fromFrame(Rect.fromLTWH(96, 39, 3, 16), bounds, location) {
@@ -54,7 +53,9 @@ class BulletSprite extends Sprite {
           ship.bounds.left, -16, ship.bounds.width, SpaceInvaders.GAME_HEIGHT);
 
       bullets.add(BulletSprite(bounds, location, type));
-      Sound("shipfire.wav").play();
+      type == BulletType.SHIP1
+          ? Sound("shipfire.mp3").play()
+          : Sound("shipfire2.mp3").play();
     }
   }
 
@@ -104,7 +105,7 @@ class BulletSprite extends Sprite {
   bool move(double timePassed, [bool freeze = false]) {
     bool result = super.move(timePassed, freeze);
 
-    if (location.top <= bounds.top) {
+    if (location.top <= bounds.top || location.bottom >= bounds.bottom) {
       bulletsToRemove.add(this);
     }
     return result;

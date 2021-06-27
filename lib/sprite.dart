@@ -29,13 +29,18 @@ class Sprite {
   void draw(ui.Image spriteSheet, Canvas canvas, Size size) {
     if (isHidden()) return;
     Rect frame = spriteFrames[frameIndex];
+
     double scale = min(size.width / SpaceInvaders.GAME_WIDTH,
         size.height / SpaceInvaders.GAME_HEIGHT);
+    double offset = (size.width / 2 - (SpaceInvaders.GAME_WIDTH * scale) / 2)
+        .round()
+        .toDouble();
+
     canvas.drawImageRect(
         spriteSheet,
         frame,
         Rect.fromLTWH(
-            (location.left * scale).round().toDouble(),
+            (location.left * scale).round().toDouble() + offset,
             (location.top * scale).round().toDouble(),
             (frame.width * scale).round().toDouble(),
             (frame.height * scale).round().toDouble()),

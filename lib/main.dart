@@ -57,31 +57,33 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final FocusNode _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      print("Focus? ${_focusNode.hasFocus}");
-    });
     FocusScope.of(context).requestFocus(_focusNode);
     return MaterialApp(
         title: SpaceInvaders.TITLE,
         theme: new ThemeData(scaffoldBackgroundColor: Colors.black),
-        home: Scaffold(
-            body: RawKeyboardListener(
-                focusNode: _focusNode,
-                onKey: _spaceInvaders.onKey,
-                child: AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    double currentTime =
-                        DateTime.now().microsecondsSinceEpoch * 1000;
-                    double timePassed = currentTime - _prevTime;
-                    _prevTime = currentTime;
+        home: SafeArea(
+            child: Scaffold(
+                body: RawKeyboardListener(
+                    focusNode: _focusNode,
+                    onKey: _spaceInvaders.onKey,
+                    child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTapDown: _spaceInvaders.onTapDown,
+                        onTapUp: _spaceInvaders.onTapUp,
+                        child: AnimatedBuilder(
+                          animation: _animation,
+                          builder: (context, child) {
+                            double currentTime =
+                                DateTime.now().microsecondsSinceEpoch * 1000;
+                            double timePassed = currentTime - _prevTime;
+                            _prevTime = currentTime;
 
-                    return CustomPaint(
-                      child: Container(),
-                      painter: GamePainter(_spaceInvaders, timePassed),
-                    );
-                  },
-                ))));
+                            return CustomPaint(
+                              child: Container(),
+                              painter: GamePainter(_spaceInvaders, timePassed),
+                            );
+                          },
+                        ))))));
   }
 
   @override

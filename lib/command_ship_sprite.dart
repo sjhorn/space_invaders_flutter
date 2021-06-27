@@ -6,8 +6,8 @@ import 'sound.dart';
 
 class CommandShipSprite extends ScoringSprite {
   static const double EXPLODING_TIME = 1200000000;
-  static final Sound commandshiphit = Sound("commandshiphit.wav");
-  static final Sound commandshipmove = Sound("commandship.wav");
+  static final Sound commandshiphit = Sound("commandshiphit.mp3");
+  static final Sound commandshipmove = Sound("commandship.mp3");
 
   double soundTime = 0;
   double explosionFrameTime = 0;
@@ -31,7 +31,7 @@ class CommandShipSprite extends ScoringSprite {
 
   @override
   bool move(double timePassed, [bool freeze = false]) {
-    if (isHidden()) {
+    if (isHidden() || freeze) {
       return false;
     }
     if (exploding) {
@@ -67,6 +67,7 @@ class CommandShipSprite extends ScoringSprite {
   }
 
   void explode() {
+    commandshipmove.stop();
     frameIndex = 1;
     exploding = true;
     commandshiphit.play();

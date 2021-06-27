@@ -9,30 +9,21 @@ import 'package:path_provider/path_provider.dart';
 class Sound {
   static final Map<String, CachedSound> uriMap = {};
 
-  bool soundEnabled = kIsWeb || !Platform.isLinux;
   late String _sound;
   String prefix = "assets/sounds/";
 
   Sound(this._sound);
 
   void play() async {
-    if (!soundEnabled) return;
-    CachedSound cachedSound;
-    if (!uriMap.containsKey(_sound)) {
-      String uri = await fetchToMemory(_sound);
-      if (uri.length == 0) return;
-      AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
-      audioPlayer.setReleaseMode(ReleaseMode.STOP);
-      cachedSound = CachedSound(uri, audioPlayer);
-      uriMap[_sound] = cachedSound;
-    } else {
-      cachedSound = uriMap[_sound]!;
-    }
+    //if (!soundEnabled) return;
 
+    CachedSound cachedSound = await loadSound();
+    cachedSound.audioPlayer.setReleaseMode(ReleaseMode.STOP);
     cachedSound.audioPlayer
         .play(cachedSound.uri,
+            isLocal: true,
             volume: 1.0,
-            respectSilence: true,
+            // respectSilence: true,
             stayAwake: false,
             recordingActive: false,
             duckAudio:
@@ -41,6 +32,29 @@ class Sound {
         .catchError((e) {
       print("Audio error $e");
     });
+  }
+
+  void stop() async {
+    CachedSound cachedSound = await loadSound();
+    cachedSound.audioPlayer.stop();
+  }
+
+  void loop() async {
+    CachedSound cachedSound = await loadSound();
+    await cachedSound.audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+    cachedSound.audioPlayer.play(cachedSound.uri);
+  }
+
+  Future<CachedSound> loadSound() async {
+    if (!uriMap.containsKey(_sound)) {
+      String uri = await fetchToMemory(_sound);
+      AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
+      audioPlayer.onPlayerError.listen((msg) {
+        print(msg);
+      });
+      uriMap[_sound] = CachedSound(uri, audioPlayer);
+    }
+    return uriMap[_sound]!;
   }
 
   Future<String> fetchToMemory(String fileName) async {
@@ -62,6 +76,7 @@ class Sound {
     await file.create(recursive: true);
     await file.writeAsBytes(byteData.buffer.asUint8List());
 
+    print(file.uri.toString());
     // returns the local file uri
     return file.uri.toString();
   }
