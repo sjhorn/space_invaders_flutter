@@ -1,4 +1,4 @@
-package com.example.space_invaders_2
+package com.hornmicro.spaceinvaders
 
 import io.flutter.embedding.android.FlutterActivity
 

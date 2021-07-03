@@ -76,7 +76,6 @@ class Sound {
     await file.create(recursive: true);
     await file.writeAsBytes(byteData.buffer.asUint8List());
 
-    print(file.uri.toString());
     // returns the local file uri
     return file.uri.toString();
   }

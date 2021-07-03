@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = space_invaders_2
+PRODUCT_NAME = Space Invaders
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.spaceInvaders2
+PRODUCT_BUNDLE_IDENTIFIER = com.hornmicro.spaceinvaders
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2021 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2021 Scott Horn. All rights reserved.

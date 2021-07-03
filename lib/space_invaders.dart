@@ -22,7 +22,7 @@ import 'dart:io' show Platform;
 import 'sprite.dart';
 
 class SpaceInvaders {
-  static const String TITLE = "Flutter Space Invaders";
+  static const String TITLE = "Hornmicro Space Invaders";
   static const double GAME_WIDTH = 576;
   static const double GAME_HEIGHT = 440;
   static const logicalBounds = Rect.fromLTWH(0, 10, GAME_WIDTH, GAME_HEIGHT);
@@ -209,13 +209,8 @@ class SpaceInvaders {
   }
 
   void onTapUp(TapUpDetails event) {
-    double qtrWidth = _size.width / 4;
-    double posX = event.globalPosition.dx;
-    if (posX < qtrWidth) {
-      ship1Sprite.leftOff();
-    } else if (posX > 3 * qtrWidth) {
-      ship1Sprite.rightOff();
-    }
+    ship1Sprite.leftOff();
+    ship1Sprite.rightOff();
   }
 
   void onKey(RawKeyEvent event) {
