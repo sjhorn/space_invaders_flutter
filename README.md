@@ -10,6 +10,10 @@ A port of my groovy space invaders to flutter for learning and testing cross-pla
 * [Building A 2D game in Flutter- A Comprehensive Guide](https://blog.geekyants.com/building-a-2d-game-in-flutter-a-comprehensive-guide-913f647846bc)
 
 
+## Credits
+
+* [App Privacy Policy Generator](https://app-privacy-policy-generator.nisrulz.com)
+
 ## Policies / Licence
 
 * [Privacy Policy](privacy_policy.md)
