@@ -12,6 +12,6 @@ A port of my groovy space invaders to flutter for learning and testing cross-pla
 
 ## Policies / Licence
 
-* [Privacy Policy](private_policy.md)
+* [Privacy Policy](privacy_policy.md)
 * [Terms and Conditions](terms.md)
 * [Licence - Creative Commons](http://creativecommons.org/licenses/by-sa/3.0/)
